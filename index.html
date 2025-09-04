@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grupo VTN Baterias - Qualidade e Confiança</title>
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+  <link rel="stylesheet" href="assets/css/index.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <header class="meu-header">
+    <div class="header-side">
+      <button class="menu-btn">☰</button>
+      <button class="search-btn" id="searchBtn" aria-label="Pesquisar Produtos">
+        <i class="fas fa-search"></i>
+    </div>
+    <a href="index.html" class="logo" style="text-decoration: none">
+      <img src="assets/img/logo.png" alt="Logo VTN" class="logo-img" />
+    </a>
+    <div class="header-side">
+      <a href="#" id="headerCartLink" class="header-cart-btn">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Carrinho (0)</span>
+      </a>
+      <button class="user-btn" id="userBtn" aria-label="Área do Usuário">
+        <i class="fas fa-user"></i>
+      </button>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>Menu</h3>
+        <button class="close-btn">×</button>
+      </div>
+      <ul class="sidebar-menu">
+        <li>
+          <a href="index.html"><i class="fas fa-home"></i> Início</a>
+        </li>
+        <li>
+          <a href="catalogo_produtos.html"><i class="fas fa-battery-full"></i> Catálogo</a>
+        </li>
+        <li>
+          <a href="https://wa.me/5513997979637" target="_blank"><i class="fab fa-whatsapp"></i> Nosso Whatsapp</a>
+        </li>
+      </ul>
+    </div>
+    <div class="overlay"></div>
+    <div class="user-sidebar" id="userSidebar">
+      <div class="sidebar-header">
+        <h3>Minha Conta</h3>
+        <button class="close-btn" id="closeUserSidebarBtn">×</button>
+      </div>
+      <div id="userSidebarContent" class="user-sidebar-content"></div>
+    </div>
+  </header>
+
+  <section class="welcome-section">
+    <div class="welcome-container">
+      <p>Bem-vindo à VTN Baterias! Qualidade e confiança para o seu dispositivo há mais de 13 anos.</p>
+    </div>
+  </section>
+  <main class="main-content">
+
+    <section class="hero-section-wrapper">
+      <div id="promo-hero" class="promo-hero-card" style="display: none;">
+        <a href="#" id="hero-card-link" class="hero-card-image-link">
+          <img src="assets/img/placeholder.svg" id="hero-card-image" alt="Produto em promoção">
+        </a>
+        <div class="hero-card-info">
+          <p class="hero-card-promo-title">PROMOÇÃO IMPERDÍVEL</p>
+          <h2 class="hero-card-product-title" id="hero-card-product-title">Carregando promoção...</h2>
+          <p class="hero-card-product-sku" id="hero-card-product-sku">SKU: ...</p>
+          <div class="hero-card-price-wrapper">
+            <span class="hero-card-price-old" id="hero-card-price-old">R$ 0,00</span>
+            <span class="hero-card-price-new" id="hero-card-price-new">R$ 0,00</span>
+          </div>
+          <a href="#" id="hero-card-button" class="hero-card-button">Ver Detalhes</a>
+        </div>
+      </div>
+
+      <div id="fallback-hero" class="fallback-hero" style="display: none;">
+        <div class="fallback-hero-overlay"></div>
+        <div class="fallback-hero-content">
+          <h1 class="fallback-hero-title">VTN Baterias<br>o melhor para seu dispositivo.</h1>
+        </div>
+      </div>
+    </section>
+
+    <section class="brands-section">
+      <h2 class="brands-title">Marcas que Trabalhamos</h2>
+      <div class="brands-carousel-wrapper">
+        <div class="brands-grid">
+          <a href="catalogo_produtos.html?brand=apple" class="brand-link"><img src="assets/img/apple-logo.png"
+              alt="Apple" class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=asus" class="brand-link"><img src="assets/img/asus-logo.png" alt="Asus"
+              class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=huawei" class="brand-link"><img src="assets/img/huawei-logo.png"
+              alt="Huawei" class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=infinix" class="brand-link"><img src="assets/img/infinix-logo.png"
+              alt="Infinix" class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=lenovo" class="brand-link"><img src="assets/img/lenovo-logo.png"
+              alt="Lenovo" class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=lg" class="brand-link"><img src="assets/img/lg-logo.png" alt="LG"
+              class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=motorola" class="brand-link"><img src="assets/img/motorola-logo.png"
+              alt="Motorola" class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=multilaser" class="brand-link"><img src="assets/img/multilaser-logo.png"
+              alt="Multilaser" class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=nokia" class="brand-link"><img src="assets/img/nokia-logo.png"
+              alt="Nokia" class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=philco" class="brand-link"><img src="assets/img/philco-logo.png"
+              alt="Philco" class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=positivo" class="brand-link"><img src="assets/img/positivo-logo.png"
+              alt="Positivo" class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=samsung" class="brand-link"><img src="assets/img/samsung-logo.png"
+              alt="Samsung" class="brand-logo" /></a>
+          <a href="catalogo_produtos.html?brand=xiaomi" class="brand-link"><img src="assets/img/xiaomi-logo.png"
+              alt="Xiaomi" class="brand-logo" /></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="differentiators-section">
+      <h2 class="section-title">Porquê Escolher a VTN Baterias?</h2>
+      <div class="differentiators-grid">
+        <div class="differentiator-card">
+          <i class="fas fa-award"></i>
+          <h3>Qualidade Garantida</h3>
+          <p>
+            Trabalhamos apenas com produtos de alta performance e
+            durabilidade, oferecendo garantia para a sua total tranquilidade.
+          </p>
+        </div>
+
+        <div class="differentiator-card">
+          <i class="fas fa-cubes"></i>
+          <h3>Vasta Gama de Produtos</h3>
+          <p>
+            O nosso extenso catálogo cobre as principais marcas do mercado,
+            garantindo que encontrará a bateria certa para o seu dispositivo.
+          </p>
+        </div>
+
+        <div class="differentiator-card">
+          <i class="fas fa-headset"></i>
+          <h3>Atendimento Especializado</h3>
+          <p>
+            A nossa equipa está sempre disponível para o ajudar a encontrar a
+            solução ideal e a responder a todas as suas questões rapidamente.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="payment-wholesale-section">
+      <h2 class="section-title">Condições e Pagamento</h2>
+      <div class="payment-wholesale-grid">
+        <div class="info-card">
+          <i class="fas fa-box-open"></i>
+          <h3>Vendas em Atacado</h3>
+          <p>
+            Oferecemos condições especiais para compras em grande quantidade.
+            A partir de <strong>10 peças</strong>, você recebe
+            <strong>10% de desconto</strong> no valor total do seu pedido. O
+            desconto é aplicado automaticamente no carrinho.
+          </p>
+        </div>
+
+        <div class="info-card">
+          <i class="fas fa-credit-card"></i>
+          <h3>Métodos de Pagamento</h3>
+          <p>
+            Aceitamos as formas de pagamento mais populares para sua
+            conveniência. Finalize seu orçamento conosco via Pix, Boleto
+            Bancário, Cartões de Crédito ou Débito.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-cta-section">
+      <div class="catalog-cta-content">
+        <h2>Explore o Nosso Catálogo Completo</h2>
+        <p>
+          Temos uma vasta gama de baterias para as mais diversas marcas e
+          modelos. Encontre a solução perfeita para o seu dispositivo com a
+          qualidade e a confiança que só o Grupo VTN oferece.
+        </p>
+        <a href="catalogo_produtos.html" class="catalog-cta-btn">Ver Catálogo Agora</a>
+      </div>
+    </section>
+
+    <section class="featured-products">
+      <h2 class="featured-products-title">Produtos em Destaque</h2>
+      <div class="carousel-wrapper">
+        <div class="carousel-container" id="productCarousel">
+          <div class="loading-state">
+            <i class="fas fa-spinner fa-spin"></i>
+            <h3>A carregar destaques...</h3>
+          </div>
+        </div>
+        <button id="carousel-prev" class="carousel-btn prev-btn">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="carousel-next" class="carousel-btn next-btn">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <section class="whatsapp-contact-section">
+      <div class="whatsapp-contact-content">
+        <h2>Fale Conosco via WhatsApp</h2>
+        <p>Envie-nos uma mensagem rápida e entraremos em contato!</p>
+        <div class="whatsapp-input-group">
+          <input type="text" id="whatsappMessageInput" class="whatsapp-message-input"
+            placeholder="Digite sua mensagem aqui..." />
+          <a href="https://wa.me/5513997979637" id="whatsappSectionBtn" class="whatsapp-section-btn" target="_blank">
+            <i class="fab fa-whatsapp"></i> Enviar Mensagem
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-column">
+        <img src="assets/img/logo.png" alt="Logo Grupo VTN" class="footer-logo" />
+        <p>
+          Qualidade e confiança em baterias para o seu dia a dia, há mais de
+          13 anos no mercado.
+        </p>
+      </div>
+
+      <div class="footer-column">
+        <h4>Informações de Contato</h4>
+        <p>
+          <i class="fas fa-building"></i> Robin Hood Importacao, Exportacao e
+          Comercio LTDA
+        </p>
+        <p><i class="far fa-id-card"></i> CNPJ: 17.157.023/0001-07</p>
+        <p>
+          <i class="fas fa-map-marker-alt"></i> Rua Comendador Assad Abdalla,
+          22 - São Paulo, SP
+        </p>
+        <p>
+          <i class="fab fa-whatsapp"></i>
+          <a href="https://wa.me/5513997979637" target="_blank">+55 (13) 99797-9637</a>
+        </p>
+      </div>
+
+      <div class="footer-column">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="index.html">Início</a></li>
+          <li><a href="catalogo_produtos.html">Catálogo Completo</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Grupo VTN. Todos os direitos reservados.</p>
+      <p>DESENVOLVIDO POR PEDRO BAFFA</p>
+    </div>
+  </footer>
+
+  <div id="contactPopup" class="contact-popup">
+    <div class="contact-popup-content">
+      <button id="closePopupBtn" class="close-popup-btn">&times;</button>
+      <h3>Fique por Dentro das Novidades!</h3>
+      <p>
+        Deixe seu contato para receber nossas melhores ofertas e lançamentos
+        em primeira mão.
+      </p>
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="popupNome">Nome:</label>
+          <input type="text" id="popupNome" name="nome" required placeholder="Seu nome completo" />
+        </div>
+        <div class="form-group">
+          <label for="popupEmail">E-mail:</label>
+          <input type="email" id="popupEmail" name="email" required placeholder="seu.email@exemplo.com" />
+        </div>
+        <div class="form-group">
+          <label for="popupWhatsapp">WhatsApp:</label>
+          <input type="tel" id="popupWhatsapp" name="whatsapp" required placeholder="(XX) XXXXX-XXXX" />
+        </div>
+        <button type="submit" class="submit-popup-btn">Enviar Contato</button>
+        <div id="popupMessage" class="popup-message"></div>
+      </form>
+    </div>
+  </div>
+
+  <button id="backToTopBtn" class="back-to-top-btn" title="Voltar ao topo">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <script src="assets/js/index.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/carrinho.js"></script>
+
+  <div id="searchModal" class="search-modal">
+    <div class="search-modal-content">
+      <div class="search-modal-header">
+        <h3>Pesquisar Produtos</h3>
+        <button id="closeSearchBtn" class="close-search-btn">&times;</button>
+      </div>
+      <div class="search-input-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="modalSearchInput" class="search-input" placeholder="Buscar por marca, modelo ou SKU...">
+      </div>
+      <div id="searchResults" class="search-results">
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

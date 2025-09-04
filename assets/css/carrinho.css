@@ -1,0 +1,106 @@
+/**
+ * @file
+ * assets/css/carrinho.css
+ * Estilos para a página do carrinho de compras/orçamento.
+ */
+
+/* ============================================= */
+/* --- LAYOUT GERAL DO CONTAINER --- */
+/* ============================================= */
+
+.container-carrinho { max-width: 900px; margin: 120px auto 40px auto; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+.container-carrinho h1 { text-align: center; margin-bottom: 30px; color: var(--texto-escuro); }
+
+/* ============================================= */
+/* --- ESTILOS DOS ITENS INDIVIDUAIS NO CARRINHO --- */
+/* ============================================= */
+
+.cart-item { display: grid; grid-template-columns: 80px 1fr 120px 100px 50px; gap: 15px; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--cinza-claro); }
+.cart-item-image img { width: 100%; height: auto; border-radius: 5px; }
+.cart-item-title { font-weight: 600; }
+.cart-item-sku { font-size: 0.8rem; color: #777; }
+.cart-item-price { font-weight: 500; }
+.cart-item-quantity { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 5px; }
+.cart-item-quantity input { flex-grow: 1; text-align: center; border: none; min-width: 40px; }
+.cart-item-quantity .qty-btn { background: #f1f1f1; border: none; width: 30px; height: 30px; cursor: pointer; flex-shrink: 0; }
+.cart-item-total { font-weight: 600; text-align: right; }
+.cart-item-remove { text-align: center; }
+.remove-btn { background: none; border: none; color: #c0392b; cursor: pointer; font-size: 1.1rem; }
+
+/* ============================================= */
+/* --- ESTILOS PARA PREÇOS COM DESCONTO --- */
+/* ============================================= */
+
+.cart-item-price-original { font-size: 0.8rem; color: #999; text-decoration: line-through; }
+.cart-item-price-discounted { font-weight: 600; color: var(--verde-escuro); }
+
+/* ============================================= */
+/* --- RESUMO DO CARRINHO (SUBTOTAL, TOTAIS) --- */
+/* ============================================= */
+
+.cart-summary { margin-top: 30px; padding-top: 20px; border-top: 2px solid #333; text-align: right; }
+.cart-summary .cart-discount, .cart-summary .cart-total { font-size: 1.2rem; margin-bottom: 10px; display: flex; justify-content: space-between; }
+.cart-summary .cart-discount .discount-value { color: #27ae60; font-weight: bold; }
+.cart-summary .cart-total { font-size: 1.4rem; padding-top: 10px; border-top: 1px solid var(--cinza-claro); margin-bottom: 20px; }
+.cart-subtotal { font-size: 1.2rem; margin-bottom: 20px; }
+.cart-subtotal strong { color: var(--verde-escuro); }
+.whatsapp-checkout-btn { background: #25d366; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+.whatsapp-checkout-btn:hover { background: #128c7e; }
+
+/* ============================================= */
+/* --- SEÇÃO DE CÁLCULO DE FRETE --- */
+/* ============================================= */
+
+.cart-shipping { margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; text-align: left; }
+.cart-shipping h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+.shipping-input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+#cepInput { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+#calculateShippingBtn { background: var(--verde-escuro); color: white; border: none; padding: 0 20px; border-radius: 5px; cursor: pointer; font-weight: 500; }
+#shippingResult .loading, #shippingResult .error { font-weight: 500; padding: 10px; }
+#shippingResult .error { color: #c0392b; }
+.shipping-option { display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid #e0e0e0; }
+.shipping-option:last-child { border-bottom: none; }
+.shipping-option label { flex-grow: 1; display: flex; justify-content: space-between; cursor: pointer; }
+.shipping-option .price { font-weight: bold; }
+.cart-grand-total { font-size: 1.5rem; font-weight: bold; color: var(--texto-escuro); border-top: 2px solid #333; margin-top: 20px; padding-top: 20px; }
+
+/* ============================================= */
+/* --- ESTADO DE CARRINHO VAZIO --- */
+/* ============================================= */
+
+.empty-cart-message { text-align: center; padding: 50px 0; }
+.empty-cart-message i { font-size: 4rem; color: #ccc; }
+.empty-cart-message p { font-size: 1.2rem; margin: 15px 0; }
+.btn-primary { background: var(--verde-claro); color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+
+/* ============================================= */
+/* --- MODAL DE CONFIRMAÇÃO --- */
+/* ============================================= */
+
+.custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 5000; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+.custom-modal-overlay.active { opacity: 1; pointer-events: all; }
+.custom-modal-content { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); transform: scale(0.95); transition: transform 0.3s ease; }
+.custom-modal-overlay.active .custom-modal-content { transform: scale(1); }
+.custom-modal-title { font-size: 1.5rem; font-weight: 600; color: var(--texto-escuro); margin-top: 0; margin-bottom: 15px; }
+.custom-modal-title .fas { color: #f39c12; margin-right: 10px; }
+.custom-modal-text { font-size: 1rem; color: #555; line-height: 1.6; margin-bottom: 25px; }
+.custom-modal-actions { display: flex; gap: 15px; justify-content: center; }
+.modal-btn { padding: 12px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease; flex: 1; font-family: "Poppins", sans-serif; }
+.modal-btn.secondary { background-color: #f1f1f1; color: #333; }
+.modal-btn.secondary:hover { background-color: #e0e0e0; }
+.modal-btn.danger { background-color: #e74c3c; color: white; }
+.modal-btn.danger:hover { background-color: #c0392b; }
+
+/* ============================================= */
+/* --- RESPONSIVIDADE --- */
+/* ============================================= */
+
+@media (max-width: 768px) {
+    .container-carrinho { margin-top: 100px; padding: 15px; }
+    .cart-item { grid-template-columns: 60px 1fr 60px; grid-template-areas: "img details remove" "img qty total"; gap: 10px; }
+    .cart-item-image { grid-area: img; }
+    .cart-item-details { grid-area: details; }
+    .cart-item-quantity { grid-area: qty; }
+    .cart-item-total { grid-area: total; text-align: right; }
+    .cart-item-remove { grid-area: remove; }
+}

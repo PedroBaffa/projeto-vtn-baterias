@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Baterias - VTN</title>
+    <link rel="stylesheet" href="assets/css/index.css">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="stylesheet" href="assets/css/catalogo_produtos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header class="meu-header">
+        <div class="header-side">
+            <button class="menu-btn">☰</button>
+            <button class="search-btn" id="searchBtn" aria-label="Pesquisar Produtos">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        <a href="index.html" class="logo" style="text-decoration: none;">
+            <img src="assets/img/logo.png" alt="Logo VTN" class="logo-img">
+        </a>
+        <div class="header-side">
+            <a href="#" id="headerCartLink" class="header-cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Carrinho (0)</span>
+            </a>
+            <button class="user-btn" id="userBtn" aria-label="Área do Usuário">
+                <i class="fas fa-user"></i>
+            </button>
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Menu</h3>
+                <button class="close-btn">×</button>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="catalogo_produtos.html"><i class="fas fa-battery-full"></i> Catálogo</a></li>
+                <li><a href="https://wa.me/5513997979637" target="_blank"><i class="fab fa-whatsapp"></i> Nosso
+                        Whatsapp</a></li>
+            </ul>
+        </div>
+        <div class="overlay"></div>
+        <div class="user-sidebar" id="userSidebar">
+            <div class="sidebar-header">
+                <h3>Minha Conta</h3>
+                <button class="close-btn" id="closeUserSidebarBtn">×</button>
+            </div>
+            <div id="userSidebarContent" class="user-sidebar-content"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="catalog-layout">
+            <aside class="filter-sidebar" id="filterSidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-filter"></i> Filtros</h3>
+                    <button class="close-filters-btn" id="closeFiltersBtn">&times;</button>
+                </div>
+                <div class="filter-group">
+                    <label for="searchInput" class="filter-label">Buscar</label>
+                    <input type="text" id="searchInput" class="search-input"
+                        placeholder="Busque por nome ou SKU...">
+                </div>
+                <div class="filter-group">
+                    <label for="brandFilter" class="filter-label">Marca</label>
+                    <select id="brandFilter" class="filter-select">
+                        <option value="all">Todas as Marcas</option>
+                        <option value="samsung">Samsung</option>
+                        <option value="apple">Apple</option>
+                        <option value="xiaomi">Xiaomi</option>
+                        <option value="lg">LG</option>
+                        <option value="motorola">Motorola</option>
+                        <option value="huawei">Huawei</option>
+                        <option value="asus">Asus</option>
+                        <option value="lenovo">Lenovo</option>
+                        <option value="nokia">Nokia</option>
+                        <option value="positivo">Positivo</option>
+                        <option value="multilaser">Multilaser</option>
+                        <option value="philco">Philco</option>
+                        <option value="infinix">Infinix</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sortFilter" class="filter-label">Ordenar por</label>
+                    <select id="sortFilter" class="filter-select">
+                        <option value="title_asc">Padrão (A-Z)</option>
+                        <option value="price_desc">Maior Preço</option>
+                        <option value="price_asc">Menor Preço</option>
+                        <option value="capacity_desc">Maior Capacidade (mAh)</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="limitFilter" class="filter-label">Mostrar por Página</label>
+                    <select id="limitFilter" class="filter-select">
+                        <option value="12">12 produtos</option>
+                        <option value="24">24 produtos</option>
+                        <option value="36">36 produtos</option>
+                        <option value="48">48 produtos</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button class="apply-filters-btn" id="applyFiltersBtn">Aplicar Filtros</button>
+                    <a href="catalogo_produtos.html" class="clear-filters-link">Limpar Tudo</a>
+                </div>
+            </aside>
+            <main class="product-content">
+                <div class="content-header">
+                    <div class="header-title">
+                        <h2>Nosso Catálogo</h2>
+                        <span id="productCount">Carregando...</span>
+                    </div>
+                    <button class="open-filters-btn" id="openFiltersBtn"><i class="fas fa-filter"></i> Filtrar</button>
+                </div>
+                <div class="products-grid" id="productsGrid"></div>
+                <div class="pagination-container" id="paginationContainer"></div>
+            </main>
+        </div>
+    </div>
+
+    <section class="whatsapp-contact-section">
+        <div class="whatsapp-contact-content">
+            <h2>Fale Conosco via WhatsApp</h2>
+            <p>Envie-nos uma mensagem rápida e entraremos em contato!</p>
+            <div class="whatsapp-input-group">
+                <input type="text" id="whatsappMessageInput" class="whatsapp-message-input"
+                    placeholder="Digite sua mensagem aqui...">
+                <a href="https://wa.me/5513997979637" id="whatsappSectionBtn" class="whatsapp-section-btn"
+                    target="_blank">
+                    <i class="fab fa-whatsapp"></i> Enviar Mensagem
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <img src="assets/img/logo.png" alt="Logo Grupo VTN" class="footer-logo">
+                <p>Qualidade e confiança em baterias para o seu dia a dia, há mais de 13 anos no mercado.</p>
+            </div>
+
+            <div class="footer-column">
+                <h4>Informações de Contato</h4>
+                <p><i class="fas fa-building"></i> Robin Hood Importacao, Exportacao e Comercio LTDA</p>
+                <p><i class="far fa-id-card"></i> CNPJ: 17.157.023/0001-07</p>
+                <p><i class="fas fa-map-marker-alt"></i> Rua Comendador Assad Abdalla, 22 - São Paulo, SP</p>
+                <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/5513997979637" target="_blank">+55
+                        (13)99797-9637</a></p>
+            </div>
+
+            <div class="footer-column">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="catalogo_produtos.html">Catálogo Completo</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Grupo VTN. Todos os direitos reservados.</p>
+            <p>DESENVOLVIDO POR PEDRO BAFFA</p>
+        </div>
+    </footer>
+
+    <button id="backToTopBtn" class="back-to-top-btn" title="Voltar ao topo"><i class="fas fa-arrow-up"></i></button>
+
+    <div id="searchModal" class="search-modal">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <h3>Pesquisar Produtos</h3>
+                <button id="closeSearchBtn" class="close-search-btn">&times;</button>
+            </div>
+            <div class="search-input-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="modalSearchInput" class="search-input"
+                    placeholder="Buscar por marca, modelo ou SKU...">
+            </div>
+            <div id="searchResults" class="search-results">
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/index.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/carrinho.js"></script>
+    <script src="assets/js/catalogo_produtos.js"></script>
+
+</body>
+
+</html>

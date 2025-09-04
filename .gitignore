@@ -1,0 +1,13 @@
+# Arquivo de configuração de conexão com o banco de dados
+/admin/config.php
+
+# Diretório de backups do banco de dados
+/scripts/backups/
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de IDEs
+.vscode/
+.idea/
