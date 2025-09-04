@@ -32,7 +32,7 @@ Siga os passos abaixo para configurar e rodar o projeto em um ambiente local (co
 
 1.  **Clone o Repositório**
     ```bash
-    git clone [https://github.com/PedroBaffa/projeto-vtn-ecomerce.git](https://github.com/seu-usuario/nome-do-repositorio.git)
+    git clone [https://github.com/PedroBaffa/projeto-vtn-baterias.git](https://github.com/seu-usuario/nome-do-repositorio.git)
     cd nome-do-repositorio
     ```
 
