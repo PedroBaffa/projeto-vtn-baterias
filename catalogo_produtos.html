@@ -56,71 +56,66 @@
     </header>
 
     <div class="container">
-        <div class="catalog-layout">
-            <aside class="filter-sidebar" id="filterSidebar">
-                <div class="sidebar-header">
-                    <h3><i class="fas fa-filter"></i> Filtros</h3>
-                    <button class="close-filters-btn" id="closeFiltersBtn">&times;</button>
+        <div class="filter-container">
+            <div class="main-filters">
+                <div class="search-group">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Busque por nome ou SKU...">
                 </div>
-                <div class="filter-group">
-                    <label for="searchInput" class="filter-label">Buscar</label>
-                    <input type="text" id="searchInput" class="search-input"
-                        placeholder="Busque por nome ou SKU...">
-                </div>
-                <div class="filter-group">
-                    <label for="brandFilter" class="filter-label">Marca</label>
-                    <select id="brandFilter" class="filter-select">
-                        <option value="all">Todas as Marcas</option>
-                        <option value="samsung">Samsung</option>
-                        <option value="apple">Apple</option>
-                        <option value="xiaomi">Xiaomi</option>
-                        <option value="lg">LG</option>
-                        <option value="motorola">Motorola</option>
-                        <option value="huawei">Huawei</option>
-                        <option value="asus">Asus</option>
-                        <option value="lenovo">Lenovo</option>
-                        <option value="nokia">Nokia</option>
-                        <option value="positivo">Positivo</option>
-                        <option value="multilaser">Multilaser</option>
-                        <option value="philco">Philco</option>
-                        <option value="infinix">Infinix</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="sortFilter" class="filter-label">Ordenar por</label>
-                    <select id="sortFilter" class="filter-select">
-                        <option value="title_asc">Padrão (A-Z)</option>
-                        <option value="price_desc">Maior Preço</option>
-                        <option value="price_asc">Menor Preço</option>
-                        <option value="capacity_desc">Maior Capacidade (mAh)</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="limitFilter" class="filter-label">Mostrar por Página</label>
-                    <select id="limitFilter" class="filter-select">
-                        <option value="12">12 produtos</option>
-                        <option value="24">24 produtos</option>
-                        <option value="36">36 produtos</option>
-                        <option value="48">48 produtos</option>
-                    </select>
-                </div>
-                <div class="filter-actions">
-                    <button class="apply-filters-btn" id="applyFiltersBtn">Aplicar Filtros</button>
-                    <a href="catalogo_produtos.html" class="clear-filters-link">Limpar Tudo</a>
-                </div>
-            </aside>
-            <main class="product-content">
-                <div class="content-header">
-                    <div class="header-title">
-                        <h2>Nosso Catálogo</h2>
-                        <span id="productCount">Carregando...</span>
+                <button class="toggle-filters-btn" id="toggleFiltersBtn">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Filtros</span>
+                </button>
+            </div>
+
+            <div class="advanced-filters" id="advancedFilters">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label for="brandFilter" class="filter-label">Marca</label>
+                        <select id="brandFilter" class="filter-select">
+                            <option value="all">Todas</option>
+                            <option value="samsung">Samsung</option>
+                            <option value="apple">Apple</option>
+                            <option value="xiaomi">Xiaomi</option>
+                        </select>
                     </div>
-                    <button class="open-filters-btn" id="openFiltersBtn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <div class="filter-group">
+                        <label for="sortFilter" class="filter-label">Ordenar por</label>
+                        <select id="sortFilter" class="filter-select">
+                            <option value="title_asc">Padrão</option>
+                            <option value="price_desc">Maior Preço</option>
+                            <option value="price_asc">Menor Preço</option>
+                            <option value="capacity_desc">Capacidade</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="limitFilter" class="filter-label">Itens/Página</label>
+                        <select id="limitFilter" class="filter-select">
+                            <option value="12">12</option>
+                            <option value="24">24</option>
+                            <option value="36">36</option>
+                            <option value="48">48</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <a href="catalogo_produtos.html" class="clear-filters-link" title="Limpar Filtros"><i
+                                class="fas fa-times"></i> Limpar</a>
+                        <button class="apply-filters-btn" id="applyFiltersBtn"><i class="fas fa-check"></i>
+                            Aplicar</button>
+                    </div>
                 </div>
-                <div class="products-grid" id="productsGrid"></div>
-                <div class="pagination-container" id="paginationContainer"></div>
-            </main>
+            </div>
         </div>
+
+        <main class="product-content">
+            <div class="content-header">
+                <div class="header-title">
+                    <h2>Nosso Catálogo</h2>
+                    <span id="productCount">Carregando...</span>
+                </div>
+            </div>
+            <div class="products-grid" id="productsGrid"></div>
+            <div class="pagination-container" id="paginationContainer"></div>
+        </main>
     </div>
 
     <section class="whatsapp-contact-section">
@@ -190,7 +185,6 @@
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/carrinho.js"></script>
     <script src="assets/js/catalogo_produtos.js"></script>
-
 </body>
 
 </html>
