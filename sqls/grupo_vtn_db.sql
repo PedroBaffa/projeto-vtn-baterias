@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 03/09/2025 às 19:25
+-- Tempo de geração: 05/09/2025 às 11:28
 -- Versão do servidor: 10.11.10-MariaDB-log
 -- Versão do PHP: 7.2.34
 
@@ -60,6 +60,42 @@ CREATE TABLE `contatos` (
   `email` varchar(255) NOT NULL,
   `whatsapp` varchar(20) NOT NULL,
   `data_criacao` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `pedidos`
+-- Armazena os dados gerais de cada pedido (orçamento) realizado por um usuário.
+-- Funciona como o "cabeçalho" de uma transação.
+--
+CREATE TABLE `pedidos` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL COMMENT 'Chave estrangeira para a tabela `usuarios`',
+  `valor_total` decimal(10,2) NOT NULL COMMENT 'Soma dos valores dos itens + frete',
+  `frete_tipo` varchar(100) DEFAULT NULL COMMENT 'Tipo de frete escolhido (ex: SEDEX, PAC)',
+  `frete_valor` decimal(10,2) DEFAULT 0.00,
+  `status` enum('novo','chamou','negociando','enviado','entregue','cancelado') NOT NULL DEFAULT 'novo' COMMENT 'Status para acompanhar o fluxo do pedido',
+  `data_pedido` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `pedido_itens`
+-- Armazena os produtos específicos de cada pedido, detalhando o que foi comprado.
+--
+CREATE TABLE `pedido_itens` (
+  `id` int(11) NOT NULL,
+  `pedido_id` int(11) NOT NULL COMMENT 'Chave estrangeira para a tabela `pedidos`',
+  `produto_sku` varchar(50) NOT NULL,
+  `quantidade` int(11) NOT NULL,
+  `preco_unitario` decimal(10,2) NOT NULL COMMENT 'Preço do produto no momento da compra, para histórico',
+  `preco_promocional_unitario` decimal(10,2) DEFAULT NULL COMMENT 'Preço promocional no momento da compra',
+  PRIMARY KEY (`id`),
+  KEY `pedido_id` (`pedido_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -157,6 +193,16 @@ ALTER TABLE `carrinho_itens`
 -- --- Índices de tabela `contatos` ---
 ALTER TABLE `contatos`
   ADD PRIMARY KEY (`id`);
+  
+-- --- Índices de tabela `pedidos` ---
+ALTER TABLE `pedidos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `usuario_id` (`usuario_id`);
+
+-- --- Índices de tabela `pedido_itens` ---
+ALTER TABLE `pedido_itens`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pedido_id` (`pedido_id`);
 
 -- --- Índices de tabela `produtos` ---
 ALTER TABLE `produtos`
@@ -191,6 +237,8 @@ ALTER TABLE `usuarios`
 ALTER TABLE `administradores` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `carrinho_itens` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `contatos` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `pedidos` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `pedido_itens` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `produtos` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `produto_imagens` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `produto_promocao` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -205,6 +253,16 @@ ALTER TABLE `usuarios` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `carrinho_itens`
   ADD CONSTRAINT `fk_usuario_carrinho` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
   -- Se um usuário for deletado, todos os itens do seu carrinho também serão (ON DELETE CASCADE).
+
+-- --- Restrições para tabela `pedidos` ---
+ALTER TABLE `pedidos`
+  ADD CONSTRAINT `fk_pedidos_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+  -- Se um usuário for deletado, todos os seus pedidos também serão.
+
+-- --- Restrições para tabela `pedido_itens` ---
+ALTER TABLE `pedido_itens`
+  ADD CONSTRAINT `fk_itens_pedido` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE;
+  -- Se um pedido for deletado, todos os seus itens também serão.
 
 -- --- Restrições para tabelas `produto_imagens` ---
 ALTER TABLE `produto_imagens`
