@@ -1,142 +1,129 @@
-/**
- * @file
- * assets/js/catalogo_produtos.js
- * Controla toda a lógica da página de catálogo de produtos.
- * Lida com a busca de produtos na API, aplicação de filtros,
- * renderização da grade de produtos e criação da paginação.
- */
-
+// Aguarda o carregamento completo do HTML da página antes de executar o script.
+// Isso evita erros ao tentar manipular elementos que ainda não existem.
 document.addEventListener("DOMContentLoaded", () => {
-    // --- ELEMENTOS DO DOM ---
-    // Seleciona todos os elementos da página que serão manipulados pelo script.
-    const productsGrid = document.getElementById("productsGrid");
-    const paginationContainer = document.getElementById("paginationContainer");
-    const searchInput = document.getElementById("searchInput");
-    const brandFilter = document.getElementById("brandFilter");
-    const sortFilter = document.getElementById("sortFilter");
-    const limitFilter = document.getElementById("limitFilter");
-    const applyFiltersBtn = document.getElementById("applyFiltersBtn");
-    const productCountSpan = document.getElementById("productCount");
-    const filterSidebar = document.getElementById("filterSidebar");
-    const openFiltersBtn = document.getElementById("openFiltersBtn");
-    const closeFiltersBtn = document.getElementById("closeFiltersBtn");
 
-    // Variável para manter o controle da página atual.
+    // --- MAPEAMENTO DOS ELEMENTOS DO HTML (DOM) ---
+    // Guardamos referências aos elementos principais da página em variáveis para acesso rápido.
+    const productsGrid = document.getElementById("productsGrid"); // A grelha onde os produtos aparecem.
+    const paginationContainer = document.getElementById("paginationContainer"); // Onde os botões de página ficam.
+    const searchInput = document.getElementById("searchInput"); // O campo de busca por texto.
+    const brandFilter = document.getElementById("brandFilter"); // O seletor de marcas.
+    const sortFilter = document.getElementById("sortFilter"); // O seletor de ordenação.
+    const limitFilter = document.getElementById("limitFilter"); // O seletor de quantos produtos por página.
+    const applyFiltersBtn = document.getElementById("applyFiltersBtn"); // O botão para aplicar os filtros.
+    const productCountSpan = document.getElementById("productCount"); // Onde o total de produtos é exibido.
+    const toggleFiltersBtn = document.getElementById("toggleFiltersBtn"); // O botão para mostrar/esconder filtros no telemóvel.
+    const advancedFilters = document.getElementById("advancedFilters"); // O contentor dos filtros avançados.
+
+    // --- ESTADO DA PÁGINA ---
+    // Variável que guarda a página atual em que o utilizador está. Começa na página 1.
     let currentPage = 1;
 
-    // --- FUNÇÃO PRINCIPAL DE RENDERIZAÇÃO ---
-
     /**
-     * Busca e renderiza os produtos na página com base nos filtros atuais.
-     * @param {number} page - O número da página a ser exibida.
+     * Função principal que busca os produtos na API e os renderiza na página.
+     * @param {number} page - O número da página a ser carregada. O padrão é 1.
      */
     async function renderProducts(page = 1) {
-        currentPage = page;
-        // Captura os valores atuais de todos os campos de filtro.
+        currentPage = page; // Atualiza a página atual.
+
+        // Recolhe os valores atuais de todos os filtros.
         const filterBrand = brandFilter.value;
         const sortOrder = sortFilter.value;
         const searchTerm = searchInput.value;
         const productsPerPage = limitFilter.value;
 
-        // Exibe um estado de "carregando" para o usuário enquanto os dados são buscados.
+        // Mostra um estado de "a carregar" para o utilizador enquanto os dados não chegam.
         productsGrid.innerHTML = '<div class="loading" id="loadingState"><i class="fas fa-spinner fa-spin"></i><h3>A carregar produtos...</h3></div>';
         if (paginationContainer) paginationContainer.innerHTML = '';
         if (productCountSpan) productCountSpan.textContent = 'Carregando...';
 
         try {
-            // Adiciona um timestamp para evitar cache da API em algumas configurações de servidor.
-            const timestamp = new Date().getTime();
-            // Constrói a URL da API dinamicamente com os parâmetros de filtro e paginação.
+            // Constrói a URL da API com base nos filtros selecionados.
+            const timestamp = new Date().getTime(); // Adiciona um timestamp para evitar cache.
             let apiUrl = `api.php?limit=${productsPerPage}&page=${currentPage}&sort=${sortOrder}&t=${timestamp}`;
+            if (filterBrand && filterBrand !== 'all') apiUrl += `&brand=${encodeURIComponent(filterBrand)}`;
+            if (searchTerm.trim()) apiUrl += `&search=${encodeURIComponent(searchTerm)}`;
 
-            // Adiciona o filtro de marca à URL, se um for selecionado.
-            if (filterBrand && filterBrand !== 'all') {
-                apiUrl += `&brand=${encodeURIComponent(filterBrand)}`;
-            }
-            // Adiciona o termo de busca à URL, se houver algum.
-            if (searchTerm.trim()) {
-                apiUrl += `&search=${encodeURIComponent(searchTerm)}`;
-            }
-
-            // Faz a chamada assíncrona (fetch) para a API.
+            // Faz a chamada à API para buscar os dados dos produtos.
             const response = await fetch(apiUrl);
             const data = await response.json();
 
-            productsGrid.innerHTML = ""; // Limpa a grade antes de adicionar os novos produtos.
+            // Limpa a grelha para inserir os novos produtos.
+            productsGrid.innerHTML = "";
 
-            // Se a API não retornar produtos, exibe uma mensagem amigável.
+            // Se a API não retornar produtos, exibe uma mensagem de "nenhum produto encontrado".
             if (data.products.length === 0) {
                 productsGrid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><h3>Nenhum produto encontrado</h3><p>Tente ajustar a sua busca ou filtro.</p></div>`;
                 productCountSpan.textContent = "0 produtos encontrados";
-                return;
+                return; // Encerra a função aqui.
             }
 
-            // Atualiza a contagem total de produtos encontrados.
+            // Atualiza a contagem de produtos.
             productCountSpan.textContent = `${data.total} produtos encontrados`;
 
-            // Itera sobre cada produto retornado e cria o card HTML correspondente.
+            // Itera sobre cada produto recebido da API para criar o seu "card" visual.
             data.products.forEach(product => {
-                const productCard = document.createElement("a");
-                productCard.href = `produto_detalhes.html?sku=${product.sku}`;
+                const productCard = document.createElement("div"); // O contentor principal do card.
                 const isInStock = product.in_stock == '1';
                 productCard.className = `product-card ${!isInStock ? 'out-of-stock' : ''}`;
 
-                // --- Lógica de Preço ---
-                // Determina se o produto tem um preço promocional e monta o HTML do preço de acordo.
+                // Formatação de preços e emblemas (badges).
                 const price = parseFloat(product.price);
                 const promoPrice = product.promotional_price ? parseFloat(product.promotional_price) : null;
-                let priceHTML = '';
-                let saleBadge = '';
+                let priceHTML = '', saleBadge = '';
 
+                // Verifica se há um preço promocional válido e cria o HTML correspondente.
                 if (promoPrice && promoPrice < price) {
-                    // Se houver preço promocional, mostra o preço antigo riscado e o novo em destaque.
-                    priceHTML = `
-                        <div class="product-price on-sale">
-                            <span class="old-price">R$ ${price.toFixed(2).replace(".", ",")}</span>
-                            <span class="promo-price">R$ ${promoPrice.toFixed(2).replace(".", ",")}</span>
-                        </div>
-                    `;
-                    saleBadge = '<span class="sale-badge">OFERTA</span>'; // Adiciona um selo de oferta.
+                    priceHTML = `<div class="product-price on-sale"><span class="old-price">R$ ${price.toFixed(2).replace(".", ",")}</span><span class="promo-price">R$ ${promoPrice.toFixed(2).replace(".", ",")}</span></div>`;
+                    saleBadge = '<span class="sale-badge">OFERTA</span>';
                 } else {
-                    // Caso contrário, mostra apenas o preço normal.
                     priceHTML = `<div class="product-price">R$ ${price.toFixed(2).replace(".", ",")}</div>`;
                 }
-                // --- Fim da Lógica de Preço ---
 
-                // Define o selo de condição do produto ("Novo" ou "Retirado").
-                let condicaoBadge = (product.condicao === 'retirado')
-                    ? '<span class="condicao-badge retirado">Retirado</span>'
-                    : '<span class="condicao-badge novo">Novo</span>';
+                // Cria o emblema de condição ("Novo" ou "Retirado").
+                let condicaoBadge = (product.condicao === 'retirado') ? '<span class="condicao-badge retirado">Retirado</span>' : '<span class="condicao-badge novo">Novo</span>';
 
-                // Define os botões de ação com base na disponibilidade do estoque.
+                // Prepara a mensagem para o botão do WhatsApp.
+                const whatsappMessage = encodeURIComponent(`Olá! Tenho interesse no produto: ${product.title} (SKU: ${product.sku})`);
+                const whatsappUrl = `https://wa.me/5513997979637?text=${whatsappMessage}`;
+
+                // Define os botões de ação ("Detalhes" e WhatsApp) ou a mensagem "Sem Estoque".
                 let actionsHTML = isInStock
-                    ? `<span class="details-btn">Detalhes</span><span class="whatsapp-btn"><i class="fab fa-whatsapp"></i></span>`
+                    ? `<a href="produto_detalhes.html?sku=${product.sku}" class="details-btn">Detalhes</a>
+                       <a href="${whatsappUrl}" class="whatsapp-btn" target="_blank" title="Consultar no WhatsApp"><i class="fab fa-whatsapp"></i></a>`
                     : `<div class="out-of-stock-label">Sem Estoque</div>`;
 
-                // Insere o HTML completo do card de produto.
+                // Monta a estrutura HTML completa do card do produto.
                 productCard.innerHTML = `
-                <div class="product-image">
-                    ${saleBadge}
-                    <img src="${product.image || 'assets/img/placeholder.svg'}" alt="${product.title}" onerror="this.src='assets/img/placeholder.svg';">
-                </div>
-                <div class="product-info">
-                    <div class="product-brand-wrapper">
-                        <div class="product-brand">${product.brand.toUpperCase()}</div>
-                        ${condicaoBadge}
+                    <a href="produto_detalhes.html?sku=${product.sku}" class="product-link-wrapper">
+                        <div class="product-image">
+                            ${saleBadge}
+                            <img src="${product.image || 'assets/img/placeholder.svg'}" alt="${product.title}" onerror="this.src='assets/img/placeholder.svg';">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-brand-wrapper">
+                                <div class="product-brand">${product.brand.toUpperCase()}</div>
+                                ${condicaoBadge}
+                            </div>
+                            <h3 class="product-title">${product.title}</h3>
+                            <div class="product-sku">SKU: ${product.sku}</div>
+                            ${priceHTML}
+                        </div>
+                    </a>
+                    <div class="product-actions-wrapper">
+                        <div class="product-actions">${actionsHTML}</div>
                     </div>
-                    <h3 class="product-title">${product.title}</h3>
-                    <div class="product-sku">SKU: ${product.sku}</div>
-                    ${priceHTML}
-                    <div class="product-actions">${actionsHTML}</div>
-                </div>`;
+                `;
 
+                // Adiciona o card recém-criado à grelha de produtos na página.
                 productsGrid.appendChild(productCard);
             });
 
-            // Após renderizar os produtos, cria os botões de paginação.
+            // Chama a função para criar os botões de paginação.
             setupPagination(data.total, parseInt(productsPerPage), currentPage);
 
         } catch (error) {
+            // Em caso de erro na chamada da API, exibe uma mensagem de erro na grelha.
             console.error('Falha ao procurar produtos:', error);
             productsGrid.innerHTML = `<div class="no-results"><h3>Ocorreu um erro ao carregar os produtos.</h3></div>`;
             productCountSpan.textContent = "Erro ao carregar";
@@ -144,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * Cria e gerencia os botões da paginação.
+     * Cria e gere os botões de navegação entre páginas.
      * @param {number} totalProducts - O número total de produtos encontrados.
      * @param {number} limit - O número de produtos por página.
      * @param {number} currentPage - A página atual.
@@ -153,23 +140,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!paginationContainer) return;
         paginationContainer.innerHTML = "";
         const totalPages = Math.ceil(totalProducts / limit);
-        if (totalPages <= 1) return; // Não mostra a paginação se houver apenas uma página.
 
-        // Função auxiliar para criar cada botão da paginação.
+        // Se houver apenas uma página (ou menos), não mostra a paginação.
+        if (totalPages <= 1) return;
+
+        // Função auxiliar para criar cada botão.
         const createPageButton = (page, text, isDisabled = false) => {
             const button = document.createElement('button');
             button.innerHTML = text;
             button.className = 'page-btn';
             button.disabled = isDisabled;
-            if (page === currentPage) button.classList.add('active');
+            if (page === currentPage) button.classList.add('active'); // Destaca a página atual.
             button.addEventListener('click', () => {
-                renderProducts(page);
-                window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola para o topo ao trocar de página.
+                renderProducts(page); // Ao clicar, carrega a página correspondente.
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola a janela para o topo.
             });
             return button;
         };
 
-        // Adiciona botões "Anterior", numéricos e "Próximo".
+        // Cria os botões "Anterior", os números das páginas e o "Próximo".
         paginationContainer.appendChild(createPageButton(currentPage - 1, '&laquo;', currentPage === 1));
         for (let i = 1; i <= totalPages; i++) {
             paginationContainer.appendChild(createPageButton(i, i));
@@ -177,40 +166,33 @@ document.addEventListener("DOMContentLoaded", () => {
         paginationContainer.appendChild(createPageButton(currentPage + 1, '&raquo;', currentPage === totalPages));
     }
 
-    // --- EVENT LISTENERS ---
-    
-    // Adiciona um "ouvinte" para a tecla pressionada no campo de busca.
-    searchInput.addEventListener('keypress', function (event) {
-        // Verifica se a tecla pressionada foi a "Enter".
-        if (event.key === 'Enter') {
-            // Impede a ação padrão do formulário (que seria recarregar a página).
-            event.preventDefault();
-            // Clica programaticamente no botão de aplicar filtros para iniciar a busca.
-            applyFiltersBtn.click();
-        }
-    });
+    // --- EVENT LISTENERS (OUVINTES DE EVENTOS) ---
 
-    // Aplica os filtros ao clicar no botão.
+    // Define a ação do botão "Aplicar Filtros".
     applyFiltersBtn.addEventListener("click", () => {
-        renderProducts(1); // Volta para a primeira página ao aplicar novos filtros.
-        // Se a sidebar de filtros estiver aberta (em mobile), fecha ela.
-        if (filterSidebar.classList.contains('open')) {
-            filterSidebar.classList.remove('open');
-            document.body.classList.remove('sidebar-open');
+        renderProducts(1); // Volta para a primeira página com os novos filtros.
+        // Se estiver no telemóvel, esconde a barra de filtros após aplicar.
+        if (window.innerWidth <= 768) {
+            advancedFilters.classList.remove('visible');
+            toggleFiltersBtn.classList.remove('active');
         }
     });
 
-    // Lógica para abrir e fechar a barra de filtros em dispositivos móveis.
-    openFiltersBtn.addEventListener('click', () => {
-        filterSidebar.classList.add('open');
-        document.body.classList.add('sidebar-open');
+    // Permite que a busca seja feita ao pressionar "Enter" no campo de busca.
+    searchInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Impede o comportamento padrão do formulário.
+            renderProducts(1);
+        }
     });
-    closeFiltersBtn.addEventListener('click', () => {
-        filterSidebar.classList.remove('open');
-        document.body.classList.remove('sidebar-open');
+
+    // Controla o botão que mostra/esconde os filtros no telemóvel.
+    toggleFiltersBtn.addEventListener('click', () => {
+        advancedFilters.classList.toggle('visible');
+        toggleFiltersBtn.classList.toggle('active');
     });
 
     // --- CHAMADA INICIAL ---
-    // Renderiza os produtos pela primeira vez ao carregar a página.
+    // Carrega os produtos da primeira página assim que o script é executado.
     renderProducts(1);
 });
