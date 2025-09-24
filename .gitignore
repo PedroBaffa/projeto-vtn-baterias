@@ -1,8 +1,9 @@
 # Arquivo de configuração de conexão com o banco de dados
 /admin/config.php
-.robots.txt
-.sitemap.xml
-.gerar_sitemap.php
+robots.txt
+sitemap.xml
+gerar_sitemap.php
+
 
 # Diretório de backups do banco de dados
 /scripts/backups/
@@ -10,6 +11,9 @@
 # Arquivos de sistema operacional
 .DS_Store
 Thumbs.db
+
+# Arquivos de imagens de produtos
+/assets/img/products/
 
 # Arquivos de IDEs
 .vscode/
