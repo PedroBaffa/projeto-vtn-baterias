@@ -1,24 +1,16 @@
 <?php
+// Arquivo: admin/index.php (Verificado e Correto)
 
-/**
- * @file
- * Ponto de entrada para o diretório de administração.
- * A única função deste script é verificar se o usuário já está logado.
- */
-
-// Inicia a sessão para poder acessar as variáveis de sessão (como $_SESSION['user_id']).
+// Inicia a sessão para verificar o status de login
 session_start();
 
-// Verifica se a variável de sessão 'user_id' foi definida durante o login.
+// Se o usuário já tiver uma sessão ativa (estiver logado),
+// redireciona para o painel principal (visao_geral.php). O caminho está correto.
 if (isset($_SESSION['user_id'])) {
-    // Se o usuário já tiver uma sessão ativa (estiver logado),
-    // ele é imediatamente redirecionado para a página principal do painel (visao_geral.php).
-    // Isso impede que um usuário logado veja a página de login novamente.
     header("Location: visao_geral.php");
-    exit(); // Encerra o script para garantir que o redirecionamento ocorra.
+    exit();
 } else {
-    // Se o usuário não estiver logado (nenhuma sessão ativa encontrada),
-    // ele é redirecionado para a página de login para se autenticar.
+    // Se não estiver logado, redireciona para a página de login. O caminho está correto.
     header("Location: login.php");
-    exit(); // Encerra o script.
+    exit();
 }

@@ -1,0 +1,78 @@
+/* Estilos para a página Minhas Perguntas */
+body {
+    padding-top: 100px;
+}
+
+.container-perguntas {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.container-perguntas h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: var(--texto-escuro);
+}
+
+.container-perguntas>p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.pergunta-item {
+    border: 1px solid var(--cinza-claro);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.pergunta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid var(--cinza-claro);
+}
+
+.pergunta-produto a {
+    font-weight: 600;
+    color: var(--verde-escuro);
+    text-decoration: none;
+}
+
+.pergunta-produto a:hover {
+    text-decoration: underline;
+}
+
+.pergunta-data {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+.pergunta-body,
+.resposta-body {
+    padding: 15px;
+}
+
+.resposta-body {
+    background-color: #f0fff4;
+    border-top: 1px dashed #b8e9d1;
+}
+
+.resposta-body.nao-lida {
+    background-color: #fffbe6;
+    /* Amarelo claro para destacar */
+    border-left: 4px solid #f9bf2d;
+}
+
+.nenhuma-pergunta {
+    text-align: center;
+    padding: 40px;
+    color: #777;
+}

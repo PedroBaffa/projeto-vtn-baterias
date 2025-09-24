@@ -1,22 +1,9 @@
-/**
- * @file
- * assets/js/index.js
- * Script principal para a página inicial (index.html).
- * Controla a interatividade de múltiplos componentes, como o hero,
- * carrosséis, menus, popups e a funcionalidade de busca.
- */
-
 document.addEventListener("DOMContentLoaded", function () {
 
-    // --- LÓGICA DO HERO CARD PROMOCIONAL ---
+    // --- LÓGICA FINAL DO HERO CARD ---
     const promoHeroCard = document.getElementById('promo-hero');
     const fallbackHero = document.getElementById('fallback-hero');
 
-    /**
-     * Busca produtos em promoção via API e, se existirem,
-     * configura um card de destaque que alterna entre eles.
-     * Se não houver promoções, exibe um hero padrão.
-     */
     async function setupPromoHero() {
         if (!promoHeroCard || !fallbackHero) return;
 
@@ -40,41 +27,44 @@ document.addEventListener("DOMContentLoaded", function () {
                 const cardPriceNew = document.getElementById('hero-card-price-new');
                 const cardButton = document.getElementById('hero-card-button');
 
-                // Função para preencher o card com os dados de um produto.
                 function updateHeroContent(product) {
                     const productUrl = `produto_detalhes.html?sku=${product.sku}`;
+
                     cardLink.href = productUrl;
                     cardImage.src = product.image || 'assets/img/placeholder.svg';
                     cardImage.alt = product.title;
+
                     cardTitle.textContent = product.title;
                     cardSku.textContent = `SKU: ${product.sku}`;
+
                     cardPriceOld.textContent = `R$ ${parseFloat(product.price).toFixed(2).replace('.', ',')}`;
                     cardPriceNew.textContent = `R$ ${parseFloat(product.promotional_price).toFixed(2).replace('.', ',')}`;
+
                     cardButton.href = productUrl;
                 }
 
-                // Exibe o primeiro produto.
+                // Exibe o primeiro produto
                 updateHeroContent(products[currentIndex]);
 
-                // Se houver mais de um produto em promoção, inicia o carrossel.
+                // Se houver mais de um, inicia o carrossel
                 if (products.length > 1) {
                     setInterval(() => {
                         currentIndex = (currentIndex + 1) % products.length;
-                        // Animação de fade out
+
                         promoHeroCard.style.opacity = '0';
                         promoHeroCard.style.transform = 'scale(0.95)';
 
-                        // Troca o conteúdo e faz o fade in
                         setTimeout(() => {
                             updateHeroContent(products[currentIndex]);
                             promoHeroCard.style.opacity = '1';
                             promoHeroCard.style.transform = 'scale(1)';
-                        }, 500); // Tempo para a transição
+                        }, 500); // Meio segundo para a transição
 
                     }, 5000); // Troca a cada 5 segundos
                 }
+
             } else {
-                // Se não houver promoções, exibe o hero padrão.
+                // Se não houver promoções, exibe o hero padrão
                 fallbackHero.style.display = 'flex';
                 promoHeroCard.style.display = 'none';
             }
@@ -85,10 +75,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     setupPromoHero();
+    // --- FIM DA LÓGICA DO HERO ---
 
     // --- LÓGICA GERAL DO HEADER E MENU PRINCIPAL (ESQUERDO) ---
     const menuBtn = document.querySelector(".menu-btn");
-    const closeBtn = document.querySelector(".sidebar .close-btn");
+    const closeBtn = document.querySelector(".sidebar .close-btn"); // Seletor mais específico
     const sidebar = document.querySelector(".sidebar");
     const overlay = document.querySelector(".overlay");
 
@@ -98,14 +89,16 @@ document.addEventListener("DOMContentLoaded", function () {
             overlay.classList.add("active");
             document.body.style.overflow = "hidden";
         };
+
         const closeMenu = () => {
             sidebar.classList.remove("active");
             overlay.classList.remove("active");
             document.body.style.overflow = "auto";
         };
+
         menuBtn.addEventListener("click", openMenu);
         closeBtn.addEventListener("click", closeMenu);
-        overlay.addEventListener("click", closeMenu);
+        overlay.addEventListener("click", closeMenu); // Garante que o overlay feche o menu
     }
 
     // --- LÓGICA DO CARROSSEL DE PRODUTOS EM DESTAQUE ---
@@ -114,20 +107,20 @@ document.addEventListener("DOMContentLoaded", function () {
         const prevBtn = document.getElementById("carousel-prev");
         const nextBtn = document.getElementById("carousel-next");
 
-        // Busca produtos aleatórios na API para preencher o carrossel.
         const fetchFeaturedProducts = async () => {
             try {
                 const response = await fetch('api.php?limit=10&random=true');
-                if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida.');
-
+                if (!response.ok) {
+                    throw new Error('A resposta da rede não foi bem-sucedida.');
+                }
                 const data = await response.json();
+
                 if (!data.products || data.products.length === 0) {
                     productCarousel.innerHTML = '<p>Nenhum produto em destaque encontrado.</p>';
                     return;
                 }
 
-                productCarousel.innerHTML = ''; // Limpa o estado de "carregando".
-                // Cria um card para cada produto retornado.
+                productCarousel.innerHTML = '';
                 data.products.forEach(product => {
                     const productCard = document.createElement("a");
                     productCard.href = `produto_detalhes.html?sku=${product.sku}`;
@@ -149,7 +142,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         };
 
-        // Eventos para os botões de navegação do carrossel.
         if (prevBtn && nextBtn) {
             prevBtn.addEventListener('click', () => {
                 const card = productCarousel.querySelector('.product-card');
@@ -192,7 +184,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Envia os dados do formulário de contato para o back-end.
     if (contactForm) {
         contactForm.addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -213,7 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     popupMessage.textContent = result.mensagem;
                     popupMessage.style.color = 'var(--verde-escuro)';
                     contactForm.reset();
-                    // Grava na sessão do navegador que o popup já foi visto/preenchido.
                     sessionStorage.setItem('vtn_popup_seen', 'true');
                     setTimeout(closeContactPopup, 2000);
                 } else {
@@ -229,7 +219,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // --- LÓGICA DO BOTÃO VOLTAR AO TOPO ---
     const backToTopBtn = document.getElementById('backToTopBtn');
     if (backToTopBtn) {
-        // Mostra o botão quando o usuário rola a página.
         window.onscroll = function () {
             if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
                 backToTopBtn.classList.add('show');
@@ -237,22 +226,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 backToTopBtn.classList.remove('show');
             }
         };
-        // Rola a página suavemente para o topo ao clicar.
         backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
 
-    // --- SCRIPT DO WHATSAPP NA SEÇÃO DE CONTATO ---
+    // --- SCRIPT DO WHATSAPP ---
     const whatsappMessageInput = document.getElementById('whatsappMessageInput');
     const whatsappSectionBtn = document.getElementById('whatsappSectionBtn');
+
     if (whatsappMessageInput && whatsappSectionBtn) {
-        // Atualiza o link do botão de WhatsApp com a mensagem digitada pelo usuário.
         const updateWhatsAppLink = () => {
             const message = whatsappMessageInput.value;
             const baseUrl = "https://wa.me/5513997979637";
             whatsappSectionBtn.href = message ? `${baseUrl}?text=${encodeURIComponent(message)}` : baseUrl;
         };
         whatsappMessageInput.addEventListener('input', updateWhatsAppLink);
-        updateWhatsAppLink(); // Atualiza uma vez ao carregar a página.
+        updateWhatsAppLink();
     }
 
     // --- LÓGICA DO MODAL DE PESQUISA (GLOBAL) ---
@@ -273,7 +261,6 @@ document.addEventListener("DOMContentLoaded", function () {
             searchModal.classList.remove("active");
         };
 
-        // Realiza a busca na API e exibe os resultados.
         const performSearch = async (query) => {
             if (query.length < 3) {
                 searchResultsContainer.innerHTML = '<p class="search-result-info">Digite pelo menos 3 caracteres para buscar.</p>';
@@ -308,7 +295,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         };
 
-        // Adiciona os eventos de abrir/fechar o modal.
         searchBtn.addEventListener("click", openSearchModal);
         closeSearchBtn.addEventListener("click", closeSearchModal);
         searchModal.addEventListener("click", (e) => {
@@ -317,12 +303,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Adiciona um "debounce" para a busca, evitando chamadas excessivas à API.
         modalSearchInput.addEventListener("input", () => {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 performSearch(modalSearchInput.value);
-            }, 300); // Espera 300ms após o usuário parar de digitar.
+            }, 300);
         });
     }
 });

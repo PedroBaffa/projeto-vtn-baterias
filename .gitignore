@@ -1,5 +1,8 @@
 # Arquivo de configuração de conexão com o banco de dados
 /admin/config.php
+.robots.txt
+.sitemap.xml
+.gerar_sitemap.php
 
 # Diretório de backups do banco de dados
 /scripts/backups/

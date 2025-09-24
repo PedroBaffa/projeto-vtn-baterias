@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Cadastro de Usuário - VTN Baterias</title>
         <link rel="icon" type="image/png" href="assets/img/favicon.png">
+        <link rel="shortcut icon" href="assets/img/favicon.png" type="image/png">
         <link rel="stylesheet" href="assets/css/cadastro.css">
         <link rel="stylesheet" href="assets/css/index.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,6 +25,13 @@
                         cursor: pointer;
                         color: #888;
                 }
+
+                /* Estilo para feedback visual durante a busca de CEP */
+                #cep.loading {
+                        background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" width="20" height="20" style="shape-rendering: auto; display: block; background: transparent;" xmlns:xlink="http://www.w3.org/1999/xlink"><g><circle cx="50" cy="50" fill="none" stroke="%238bc34a" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138"><animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform></circle></g></svg>');
+                        background-repeat: no-repeat;
+                        background-position: right 10px center;
+                }
         </style>
 </head>
 
@@ -41,7 +49,7 @@
                         </div>
                         <ul class="sidebar-menu">
                                 <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
-                                <li><a href="catalogo_produtos.html"><i class="fas fa-battery-full"></i> Catálogo</a>
+                                <li><a href="catalogo_produtos.php"><i class="fas fa-battery-full"></i> Catálogo</a>
                                 </li>
                                 <li><a href="https://wa.me/5513997979637" target="_blank"><i
                                                         class="fab fa-whatsapp"></i> Nosso Whatsapp</a></li>
@@ -58,7 +66,6 @@
                         <div id="userSidebarContent" class="user-sidebar-content"></div>
                 </div>
         </header>
-
         <div class="container-cadastro">
                 <div class="form-wrapper">
                         <h2>Crie sua Conta</h2>
@@ -77,9 +84,28 @@
                                 <div class="form-group"><label for="telefone">Telefone / WhatsApp*</label><input
                                                 type="tel" id="telefone" name="telefone" required
                                                 placeholder="(00) 00000-0000"></div>
-                                <div class="form-group"><label for="endereco">Endereço Completo</label><input
-                                                type="text" id="endereco" name="endereco"
-                                                placeholder="Rua, Número, Bairro, Cidade - Estado, CEP"></div>
+
+                                <div class="address-grid">
+                                        <div class="form-group">
+                                                <label for="cep">CEP*</label>
+                                                <input type="text" id="cep" name="cep" required placeholder="00000-000">
+                                        </div>
+                                        <div class="form-group" data-full-width="true">
+                                                <label for="endereco">Endereço*</label>
+                                                <input type="text" id="endereco" name="endereco" required
+                                                        placeholder="Ex: Rua, Bairro, Cidade - Estado">
+                                        </div>
+                                        <div class="form-group">
+                                                <label for="numero">Número*</label>
+                                                <input type="text" id="numero" name="numero" required>
+                                        </div>
+                                        <div class="form-group">
+                                                <label for="complemento">Complemento</label>
+                                                <input type="text" id="complemento" name="complemento"
+                                                        placeholder="Ex: Apto 123">
+                                        </div>
+                                </div>
+
                                 <div class="form-group">
                                         <label for="senha">Senha*</label>
                                         <div class="password-wrapper">
@@ -88,13 +114,11 @@
                                                 <i class="fas fa-eye toggle-password" id="togglePassword"></i>
                                         </div>
                                 </div>
-
                                 <button type="submit" class="submit-btn">Finalizar Cadastro</button>
                                 <div id="formMessage" class="form-message"></div>
                         </form>
                 </div>
         </div>
-
         <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/6.4.3/imask.min.js"></script>
         <script src="assets/js/index.js"></script>
         <script src="assets/js/auth.js"></script>

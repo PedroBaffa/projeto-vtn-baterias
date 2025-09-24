@@ -17,6 +17,7 @@ if (!isset($_SESSION['usuario_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Carrinho - VTN Baterias</title>
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="shortcut icon" href="assets/img/favicon.png" type="image/png">
     <link rel="stylesheet" href="assets/css/index.css">
     <link rel="stylesheet" href="assets/css/carrinho.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -48,7 +49,7 @@ if (!isset($_SESSION['usuario_id'])) {
             </div>
             <ul class="sidebar-menu">
                 <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
-                <li><a href="catalogo_produtos.html"><i class="fas fa-battery-full"></i> Catálogo</a></li>
+                <li><a href="catalogo_produtos.php"><i class="fas fa-battery-full"></i> Catálogo</a></li>
                 <li><a href="https://wa.me/5513997979637" target="_blank"><i class="fab fa-whatsapp"></i> Nosso
                         Whatsapp</a></li>
             </ul>
@@ -75,7 +76,7 @@ if (!isset($_SESSION['usuario_id'])) {
         <div id="emptyCartMessage" class="empty-cart-message" style="display: none;">
             <i class="fas fa-shopping-cart"></i>
             <p>Seu carrinho está vazio.</p>
-            <a href="catalogo_produtos.html" class="btn-primary">Ver Produtos</a>
+            <a href="catalogo_produtos.php" class="btn-primary">Ver Produtos</a>
         </div>
     </div>
 
@@ -119,7 +120,7 @@ if (!isset($_SESSION['usuario_id'])) {
                 <h4>Navegação</h4>
                 <ul>
                     <li><a href="index.html">Início</a></li>
-                    <li><a href="catalogo_produtos.html">Catálogo Completo</a></li>
+                    <li><a href="catalogo_produtos.php">Catálogo Completo</a></li>
                 </ul>
             </div>
         </div>

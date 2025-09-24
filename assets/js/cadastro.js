@@ -1,71 +1,100 @@
-/**
- * @file
- * assets/js/cadastro.js
- * Controla a interatividade da página de cadastro de novos usuários.
- * Inclui máscaras de input e a lógica de submissão do formulário via AJAX.
- */
-
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('registrationForm');
     const messageDiv = document.getElementById('formMessage');
+    const cepInput = document.getElementById('cep');
+    const enderecoInput = document.getElementById('endereco');
+    const numeroInput = document.getElementById('numero');
 
-    // --- MÁSCARAS DE INPUT ---
-    // Aplica máscaras de input para os campos de CPF e Telefone usando a biblioteca IMask.
-    // Isso melhora a experiência do usuário, formatando os dados enquanto ele digita.
+    // Aplica as máscaras
     const cpfMask = IMask(document.getElementById('cpf'), { mask: '000.000.000-00' });
     const telMask = IMask(document.getElementById('telefone'), { mask: '(00) 00000-0000' });
+    const cepMask = IMask(cepInput, { mask: '00000-000' });
 
-    // --- SUBMISSÃO DO FORMULÁRIO ---
+    // Função para buscar o endereço pelo CEP
+    async function fetchAddress(cep) {
+        cepInput.classList.add('loading');
+        enderecoInput.value = 'Buscando...';
+        try {
+            const response = await fetch(`cep_api.php?cep=${cep}`);
+            const data = await response.json();
+
+            if (data.erro) {
+                throw new Error(data.mensagem || 'CEP não encontrado.');
+            }
+
+            // Preenche os campos com os dados retornados
+            let addressString = '';
+            if (data.logradouro) addressString += data.logradouro;
+            if (data.bairro) addressString += `, ${data.bairro}`;
+            if (data.localidade) addressString += `, ${data.localidade}`;
+            if (data.uf) addressString += ` - ${data.uf}`;
+
+            enderecoInput.value = addressString;
+            numeroInput.focus(); // Move o foco para o campo de número
+
+        } catch (error) {
+            enderecoInput.value = '';
+            messageDiv.textContent = error.message;
+            messageDiv.className = 'form-message error';
+        } finally {
+            cepInput.classList.remove('loading');
+        }
+    }
+
+    // Adiciona o "ouvinte" ao campo CEP
+    cepInput.addEventListener('blur', function () {
+        const cep = cepMask.unmaskedValue;
+        if (cep.length === 8) {
+            fetchAddress(cep);
+        }
+    });
+
+    // Lida com o envio do formulário
     form.addEventListener('submit', async function (e) {
-        // Previne o comportamento padrão do formulário (que seria recarregar a página).
         e.preventDefault();
 
+        // Validação de CPF
+        if (cpfMask.unmaskedValue.length !== 11) {
+            messageDiv.textContent = 'CPF inválido. Por favor, preencha corretamente.';
+            messageDiv.className = 'form-message error';
+            return;
+        }
+
         const formData = new FormData(form);
-        // Cria um objeto com os dados do formulário.
-        // É importante usar os valores "unmasked" (sem a máscara) para enviar ao back-end,
-        // garantindo que apenas os números sejam salvos no banco de dados.
         const data = {
             nome: formData.get('nome'),
             sobrenome: formData.get('sobrenome'),
             cpf: cpfMask.unmaskedValue,
             email: formData.get('email'),
             telefone: telMask.unmaskedValue,
+            cep: cepMask.unmaskedValue,
             endereco: formData.get('endereco'),
+            numero: formData.get('numero'),
+            complemento: formData.get('complemento'),
             senha: formData.get('senha'),
         };
 
-        // Exibe uma mensagem de feedback para o usuário.
         messageDiv.textContent = 'Enviando dados...';
-        messageDiv.className = 'form-message'; // Reseta as classes de cor.
+        messageDiv.className = 'form-message';
 
         try {
-            // Envia os dados do formulário para o script PHP de back-end de forma assíncrona.
             const response = await fetch('acoes_usuario.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-
             const result = await response.json();
-
-            // Verifica se a resposta do servidor foi bem-sucedida.
             if (response.ok) {
                 messageDiv.textContent = result.mensagem;
-                messageDiv.classList.add('success'); // Adiciona a classe de estilo para sucesso.
-                form.reset(); // Limpa o formulário.
-                // Redireciona o usuário para a página inicial após um breve intervalo.
-                setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+                messageDiv.className = 'form-message success';
+                form.reset();
+                setTimeout(() => { window.location.href = result.redirect || 'index.html'; }, 1500);
             } else {
-                // Se o servidor retornar um erro, lança uma exceção com a mensagem.
-                throw new Error(result.mensagem || 'Ocorreu um erro no cadastro.');
+                throw new Error(result.mensagem);
             }
-
         } catch (error) {
-            // Captura qualquer erro (de rede ou do servidor) e exibe para o usuário.
             messageDiv.textContent = error.message;
-            messageDiv.classList.add('error'); // Adiciona a classe de estilo para erro.
+            messageDiv.className = 'form-message error';
         }
     });
 });

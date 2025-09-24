@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Produto - VTN</title>
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="shortcut icon" href="assets/img/favicon.png" type="image/png">
     <link rel="stylesheet" href="assets/css/index.css">
     <link rel="stylesheet" href="assets/css/produto_detalhes.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+    <meta name="description" id="metaDescription" content="">
 </head>
 
 <body>
@@ -41,7 +43,8 @@
             </div>
             <ul class="sidebar-menu">
                 <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
-                <li><a href="catalogo_produtos.html"><i class="fas fa-battery-full"></i> Catálogo</a></li>
+                <li><a href="catalogo_produtos.php
+                "><i class="fas fa-battery-full"></i> Catálogo</a></li>
                 <li><a href="https://wa.me/5513997979637" target="_blank"><i class="fab fa-whatsapp"></i> Nosso
                         Whatsapp</a></li>
             </ul>
@@ -61,7 +64,7 @@
             <nav class="breadcrumb" id="breadcrumb">
                 <a href="index.html">Início</a>
                 <span class="breadcrumb-separator">/</span>
-                <a href="catalogo_produtos.html">Catálogo</a>
+                <a href="catalogo_produtos.php">Catálogo</a>
                 <span class="breadcrumb-separator">/</span>
                 <span class="breadcrumb-current" id="breadcrumbCurrent">Carregando...</span>
             </nav>
@@ -74,7 +77,7 @@
             <div class="loading" id="notFoundState" style="display: none;">
                 <i class="fas fa-exclamation-triangle"></i>
                 <h3>Produto não encontrado</h3>
-                <a href="catalogo_produtos.html" class="details-btn" style="text-decoration: none; margin-top: 1rem;"><i
+                <a href="catalogo_produtos.php" class="details-btn" style="text-decoration: none; margin-top: 1rem;"><i
                         class="fas fa-arrow-left"></i> Voltar ao Catálogo</a>
             </div>
 
@@ -136,6 +139,30 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="product-faq-section">
+                    <h2 class="section-title">Perguntas e Respostas</h2>
+
+                    <div id="faq-list" class="space-y-4">
+                    </div>
+
+                    <div class="faq-form-container mt-8 pt-6 border-t">
+                        <h3 class="text-lg font-semibold mb-3">Tem alguma dúvida?</h3>
+                        <p class="text-gray-600 mb-4">Faça a sua pergunta sobre o produto. (É necessário estar logado)
+                        </p>
+                        <form id="faq-form">
+                            <div class="form-group mb-4">
+                                <textarea id="faq-question-input" name="pergunta" rows="5"
+                                    class="w-full p-3 border rounded-md" placeholder="Digite a sua pergunta aqui..."
+                                    required></textarea>
+                            </div>
+                            <button type="submit" id="faq-submit-btn"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition">Enviar
+                                Pergunta</button>
+                            <div id="faq-form-message" class="mt-3 text-sm"></div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -152,26 +179,18 @@
 
             <div class="footer-column">
                 <h4>Informações de Contato</h4>
-                <p>
-                    <i class="fas fa-building"></i> Robin Hood Importacao, Exportacao e
-                    Comercio LTDA
-                </p>
+                <p><i class="fas fa-building"></i> Robin Hood Importacao, Exportacao e Comercio LTDA</p>
                 <p><i class="far fa-id-card"></i> CNPJ: 17.157.023/0001-07</p>
-                <p>
-                    <i class="fas fa-map-marker-alt"></i> Rua Comendador Assad Abdalla,
-                    22 - São Paulo, SP
-                </p>
-                <p>
-                    <i class="fab fa-whatsapp"></i>
-                    <a href="https://wa.me/5513997979637" target="_blank">+55 (13) 99797-9637</a>
-                </p>
+                <p><i class="fas fa-map-marker-alt"></i> Rua Comendador Assad Abdalla, 22 - São Paulo, SP</p>
+                <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/5513997979637" target="_blank">+55 (13)
+                        99797-9637</a></p>
             </div>
 
             <div class="footer-column">
                 <h4>Navegação</h4>
                 <ul>
                     <li><a href="index.html">Início</a></li>
-                    <li><a href="catalogo_produtos.html">Catálogo Completo</a></li>
+                    <li><a href="catalogo_produtos.php">Catálogo Completo</a></li>
                 </ul>
             </div>
         </div>

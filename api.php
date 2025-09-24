@@ -1,26 +1,31 @@
 <?php
+// Arquivo: api.php (Com busca de perguntas pendentes)
 
-/**
- * @file
- * api.php
- * Ponto de entrada central da API para o front-end do site.
- * Fornece dados de produtos em formato JSON com base nos parâmetros recebidos via GET.
- * Não gera HTML.
- */
-
-// Garante uma saída JSON limpa, desativando a exibição de erros do PHP.
-// Em um ambiente de produção, os erros devem ser registrados em logs, não exibidos.
 ini_set('display_errors', 0);
 error_reporting(0);
-// Define o cabeçalho da resposta para indicar que o conteúdo é JSON com codificação UTF-8.
 header("Content-Type: application/json; charset=UTF-8");
 
-// Inclui a conexão com o banco de dados.
 require_once 'admin/config.php';
 
-// --- TAREFA DE MANUTENÇÃO: LIMPAR PROMOÇÕES EXPIRADAS ---
-// Esta query é executada toda vez que a API é chamada, garantindo que os preços promocionais
-// de promoções que já terminaram sejam removidos.
+// [NOVO] CASO 0: DEVOLVER DADOS DO USUÁRIO LOGADO
+if (isset($_GET['get_user_data'])) {
+    session_start();
+    if (isset($_SESSION['usuario_id'])) {
+        try {
+            $stmt = $conn->prepare("SELECT nome, endereco FROM usuarios WHERE id = ?");
+            $stmt->execute([$_SESSION['usuario_id']]);
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+            echo json_encode(['logado' => true, 'usuario' => $usuario]);
+        } catch (PDOException $e) {
+            echo json_encode(['logado' => false]);
+        }
+    } else {
+        echo json_encode(['logado' => false]);
+    }
+    exit();
+}
+
+// Zera o preço promocional de promoções que expiraram
 try {
     $conn->exec("
         UPDATE produtos p
@@ -30,17 +35,40 @@ try {
         WHERE (pr.data_fim < NOW() OR pr.id IS NULL) AND p.promotional_price IS NOT NULL
     ");
 } catch (PDOException $e) {
-    // Em um ambiente de produção, o ideal é registrar este erro em um arquivo de log.
-    // Ex: error_log("Erro ao limpar promoções: " . $e->getMessage());
+    // Logar erro em produção
 }
 
-// --- ROTEAMENTO DE REQUISIÇÕES DA API ---
+// [NOVO] CASO 4: BUSCAR AS PERGUNTAS DO CLIENTE LOGADO
+if (isset($_GET['minhas_perguntas'])) {
+    session_start();
+    if (!isset($_SESSION['usuario_id'])) {
+        http_response_code(403);
+        echo json_encode(["error" => "Usuário não autenticado."]);
+        exit();
+    }
 
-/**
- * ROTA 1: HERO DA PÁGINA INICIAL
- * Se o parâmetro 'on_promo' for recebido, a API retorna uma lista
- * de até 10 produtos aleatórios que estão em promoção e em estoque.
- */
+    $usuario_id = $_SESSION['usuario_id'];
+
+    try {
+        $stmt_faq = $conn->prepare("
+            SELECT f.id, f.pergunta, f.resposta, f.data_pergunta, f.data_resposta, f.resposta_lida, p.title as produto_titulo, p.sku as produto_sku
+            FROM faq_perguntas f
+            JOIN usuarios u ON f.email_cliente = u.email
+            JOIN produtos p ON f.produto_id = p.id
+            WHERE u.id = ?
+            ORDER BY f.data_pergunta DESC
+        ");
+        $stmt_faq->execute([$usuario_id]);
+        $perguntas = $stmt_faq->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode(['perguntas' => $perguntas]);
+    } catch (PDOException $e) {
+        http_response_code(500);
+        echo json_encode(["error" => "Erro ao buscar perguntas."]);
+    }
+    exit();
+}
+
+// CASO 3: A PÁGINA INICIAL PEDE OS PRODUTOS EM PROMOÇÃO PARA O HERO
 if (isset($_GET['on_promo'])) {
     try {
         $stmt = $conn->prepare("
@@ -49,6 +77,7 @@ if (isset($_GET['on_promo'])) {
             FROM produtos p
             WHERE p.promotional_price IS NOT NULL 
               AND p.in_stock = 1
+              AND EXISTS (SELECT 1 FROM produto_imagens pi WHERE pi.produto_id = p.id)
             ORDER BY RAND()
             LIMIT 10
         ");
@@ -62,28 +91,39 @@ if (isset($_GET['on_promo'])) {
     exit();
 }
 
-/**
- * ROTA 2: DETALHES DE UM PRODUTO ESPECÍFICO
- * Se um 'sku' for fornecido, a API retorna todos os detalhes daquele produto.
- */
+
+// CASO 1: DETALHES DO PRODUTO (LÓGICA ATUALIZADA)
 if (isset($_GET['sku']) && !empty($_GET['sku'])) {
     try {
-        // 1. Busca os dados principais do produto.
-        $sql_produto = "SELECT id, brand, title, sku, price, promotional_price, in_stock, capacity, condicao, descricao FROM produtos WHERE sku = :sku";
+        $sql_produto = "
+            SELECT 
+                p.id, p.brand, p.title, p.sku, p.price, p.promotional_price, p.in_stock, p.capacity, p.condicao, p.descricao,
+                (SELECT pr.nome FROM promocoes pr JOIN produto_promocao pp ON pr.id = pp.promocao_id WHERE pp.produto_id = p.id AND pr.is_active = 1 AND NOW() BETWEEN pr.data_inicio AND pr.data_fim LIMIT 1) as promotion_name
+            FROM produtos p
+            WHERE p.sku = :sku 
+            AND EXISTS (SELECT 1 FROM produto_imagens pi WHERE pi.produto_id = p.id)
+        ";
         $stmt_produto = $conn->prepare($sql_produto);
         $stmt_produto->bindValue(':sku', $_GET['sku']);
         $stmt_produto->execute();
         $produto = $stmt_produto->fetch(PDO::FETCH_ASSOC);
 
-        // 2. Se o produto for encontrado, busca todas as suas imagens associadas.
         if ($produto) {
-            $sql_imagens = "SELECT image_path FROM produto_imagens WHERE produto_id = :produto_id ORDER BY ordem ASC";
+            // Busca as imagens com ID e path
+            // Busca as imagens com ID e path
+            $sql_imagens = "SELECT id, image_path FROM produto_imagens WHERE produto_id = :produto_id ORDER BY ordem ASC";
             $stmt_imagens = $conn->prepare($sql_imagens);
             $stmt_imagens->bindValue(':produto_id', $produto['id']);
             $stmt_imagens->execute();
-            $imagens = $stmt_imagens->fetchAll(PDO::FETCH_COLUMN, 0);
-            $produto['images'] = $imagens; // Adiciona o array de imagens ao objeto do produto.
+            $imagens = $stmt_imagens->fetchAll(PDO::FETCH_ASSOC); // <- Garanta que está a usar FETCH_ASSOC
+            $produto['images'] = $imagens;
+            // [ALTERAÇÃO] Busca as perguntas com status 'aprovada' OU 'pendente'
+            // [ALTERAÇÃO] Busca as perguntas (com nome do cliente) com status 'aprovada' OU 'pendente'
+            $stmt_faq = $conn->prepare("SELECT pergunta, resposta, nome_cliente FROM faq_perguntas WHERE produto_id = :produto_id AND status != 'rejeitada' ORDER BY data_resposta DESC, data_pergunta DESC");
+            $stmt_faq->execute([':produto_id' => $produto['id']]);
+            $produto['faq'] = $stmt_faq->fetchAll(PDO::FETCH_ASSOC);
         }
+
         echo json_encode($produto);
     } catch (PDOException $e) {
         http_response_code(500);
@@ -92,21 +132,15 @@ if (isset($_GET['sku']) && !empty($_GET['sku'])) {
     exit();
 }
 
-/**
- * ROTA 3: CATÁLOGO GERAL E PESQUISA (ROTA PADRÃO)
- * Se nenhuma outra condição for atendida, a API retorna uma lista paginada
- * de produtos, aplicando os filtros de busca, marca e ordenação recebidos.
- */
+// CASO 2: CATÁLOGO E PESQUISA
 else {
     try {
-        // Parâmetros de paginação e filtros
         $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 12;
         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
         $offset = ($page - 1) * $limit;
 
-        // Construção dinâmica e segura da query
         $baseSql = "FROM produtos p";
-        $whereClause = " WHERE 1";
+        $whereClause = " WHERE EXISTS (SELECT 1 FROM produto_imagens pi WHERE pi.produto_id = p.id)";
         $params = [];
 
         if (isset($_GET['brand']) && $_GET['brand'] !== 'all') {
@@ -119,12 +153,10 @@ else {
             $params[':search'] = $searchTerm;
         }
 
-        // Conta o total de produtos que correspondem aos filtros (para a paginação).
         $totalStmt = $conn->prepare("SELECT COUNT(p.id) " . $baseSql . $whereClause);
         $totalStmt->execute($params);
         $totalProducts = (int) $totalStmt->fetchColumn();
 
-        // Define a ordenação
         $sort = $_GET['sort'] ?? 'title_asc';
         if (isset($_GET['random']) && $_GET['random'] == 'true') {
             $sort = 'random';
@@ -145,14 +177,12 @@ else {
                 break;
         }
 
-        // Monta a query final para buscar os produtos da página atual.
         $productsSql = "SELECT 
                             p.brand, p.title, p.sku, p.price, p.promotional_price, p.in_stock, p.capacity, p.condicao,
                             (SELECT image_path FROM produto_imagens WHERE produto_id = p.id ORDER BY ordem ASC LIMIT 1) as image
                         " . $baseSql . $whereClause . $orderBy . " LIMIT :limit OFFSET :offset";
 
         $productsStmt = $conn->prepare($productsSql);
-        // Associa os parâmetros de forma segura.
         foreach ($params as $key => $value) {
             $productsStmt->bindValue($key, $value);
         }
@@ -161,7 +191,6 @@ else {
         $productsStmt->execute();
         $products = $productsStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Monta a resposta final em JSON, incluindo dados de paginação.
         $response = [
             'total' => $totalProducts,
             'page' => $page,
@@ -175,5 +204,4 @@ else {
     }
 }
 
-// Fecha a conexão com o banco de dados.
 $conn = null;

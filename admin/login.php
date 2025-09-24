@@ -3,16 +3,13 @@
 session_start();
 
 // --- VERIFICAÇÃO DE SESSÃO ATIVA ---
-// Se o usuário já estiver logado (ou seja, 'user_id' existe na sessão),
-// não há necessidade de mostrar a página de login. Redireciona direto para o painel.
+// Se o usuário já estiver logado, redireciona direto para o painel.
 if (isset($_SESSION['user_id'])) {
     header("Location: visao_geral.php");
-    exit(); // Encerra o script para garantir que o redirecionamento ocorra.
+    exit();
 }
 
 // --- TRATAMENTO DE ERROS ---
-// Pega a mensagem de erro da URL (ex: login.php?error=Usuário inválido), se houver.
-// A função htmlspecialchars() é uma medida de segurança para prevenir ataques XSS.
 $error = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
 ?>
 <!DOCTYPE html>
@@ -26,7 +23,6 @@ $error = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -91,10 +87,8 @@ $error = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
         const togglePassword = document.querySelector('#togglePassword');
         const password = document.querySelector('#password');
         togglePassword.addEventListener('click', function(e) {
-            // Alterna o tipo do input entre 'password' e 'text'
             const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
             password.setAttribute('type', type);
-            // Alterna o ícone entre 'olho' e 'olho cortado'
             this.classList.toggle('fa-eye-slash');
         });
     </script>

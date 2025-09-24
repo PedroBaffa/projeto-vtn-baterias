@@ -1,0 +1,87 @@
+/* Ficheiro: vtn/assets/css/galeria_admin.css */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.image-preview-item {
+    position: relative;
+    cursor: grab;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    aspect-ratio: 1 / 1; 
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    background: rgba(239, 68, 68, 0.8);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 10;
+}
+
+.image-preview-item:hover .delete-btn {
+    opacity: 1;
+}
+
+.drop-area, .gallery-uploader {
+    border: 2px dashed #cbd5e1;
+    border-radius: 0.5rem;
+    aspect-ratio: 1 / 1;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.drop-area:hover, .gallery-uploader:hover {
+    background-color: #f7fafc;
+}
+
+.drop-area.dragover {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+}
+
+.sortable-ghost {
+    opacity: 0.4;
+    background: #cce7ff;
+}
+
+/* --- ESTILO PARA O BOTÃO SALVAR --- */
+.save-btn {
+    transition: all 0.3s ease;
+}
+
+.save-btn.needs-saving {
+    background-color: #f97316; /* Laranja */
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.5);
+}
+
+.save-btn.needs-saving:hover {
+    background-color: #ea580c; /* Laranja mais escuro */
+}
+
+/* Estilos do Modal */
+.modal-overlay { background-color: rgba(0, 0, 0, 0.6); }
+.gallery-image-item { position: relative; cursor: pointer; border-radius: 0.5rem; overflow: hidden; aspect-ratio: 1 / 1; }
+.gallery-thumb { width: 100%; height: 100%; object-fit: cover; }
+.gallery-image-item:hover .image-overlay { opacity: 1; }
+.image-overlay { position: absolute; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+.check-icon { position: absolute; top: 0.25rem; right: 0.25rem; width: 20px; height: 20px; background-color: #3b82f6; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
+.gallery-image-item.selected .image-overlay { opacity: 1; }

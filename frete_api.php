@@ -1,41 +1,28 @@
 <?php
-
-/**
- * @file
- * frete_api.php
- * API para cálculo de frete.
- * Este script serve como um proxy para a API do Melhor Envio,
- * recebendo um CEP de destino e retornando as opções de frete disponíveis.
- * ATENÇÃO: Substitua os placeholders pelas suas chaves e informações reais.
- */
-
-// Define o cabeçalho da resposta como JSON com codificação UTF-8.
 header('Content-Type: application/json; charset=utf-8');
 
 // --- CONFIGURAÇÕES DA API MELHOR ENVIO ---
 
-// IMPORTANTE: Substitua pela sua chave de API (token) real do Melhor Envio.
-$token_melhor_envio = 'SEU_TOKEN_DO_MELHOR_ENVIO_VAI_AQUI';
+// COLE AQUI O SEU TOKEN GERADO NO PAINEL DO MELHOR ENVIO
+$token_melhor_envio = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYjMzYmIwMmZhYTFmOWRmMDg5Y2E1NjhiNmNjMmIxMjRmNGYxYmZkMjc3OGIzZmRkOWY4MWU0NjVmYjM4ZDg3OWQ5MjNkMTNjOTQ4YTE4M2EiLCJpYXQiOjE3NTU3MDQ2NjkuMzE5OTQ2LCJuYmYiOjE3NTU3MDQ2NjkuMzE5OTQ4LCJleHAiOjE3ODcyNDA2NjkuMzA2NDkxLCJzdWIiOiI5ZmFlMmEwNC0wMWU3LTRiZDgtYjBiZS02NmQzMzg1M2ZmNGMiLCJzY29wZXMiOlsiY2FydC1yZWFkIiwiY2FydC13cml0ZSIsImNvbXBhbmllcy1yZWFkIiwiY29tcGFuaWVzLXdyaXRlIiwiY291cG9ucy1yZWFkIiwiY291cG9ucy13cml0ZSIsIm5vdGlmaWNhdGlvbnMtcmVhZCIsIm9yZGVycy1yZWFkIiwicHJvZHVjdHMtcmVhZCIsInByb2R1Y3RzLWRlc3Ryb3kiLCJwcm9kdWN0cy13cml0ZSIsInB1cmNoYXNlcy1yZWFkIiwic2hpcHBpbmctY2FsY3VsYXRlIiwic2hpcHBpbmctY2FuY2VsIiwic2hpcHBpbmctY2hlY2tvdXQiLCJzaGlwcGluZy1jb21wYW5pZXMiLCJzaGlwcGluZy1nZW5lcmF0ZSIsInNoaXBwaW5nLXByZXZpZXciLCJzaGlwcGluZy1wcmludCIsInNoaXBwaW5nLXNoYXJlIiwic2hpcHBpbmctdHJhY2tpbmciLCJlY29tbWVyY2Utc2hpcHBpbmciLCJ0cmFuc2FjdGlvbnMtcmVhZCIsInVzZXJzLXJlYWQiLCJ1c2Vycy13cml0ZSIsIndlYmhvb2tzLXJlYWQiLCJ3ZWJob29rcy13cml0ZSIsIndlYmhvb2tzLWRlbGV0ZSIsInRkZWFsZXItd2ViaG9vayJdfQ.d-EDGV9AyXmNCNKfLYuXDS0w195ar22K0UyqnA2ZtF0eczTbONJzRvzE38hDtgC0P2wrOPZuGhtH-zOK3yFePxSHIcT5VZn43uv3SSVgkJWC7ZmN9GrRuMVqrRsNeKHEFsUDI9BSSwFyieko56yJgI4XQ4JRfOARcFMG9OTlLXa6aJpHEKuRg9cnLxPp3G5yzRVwjybqeRi--33JGGYRoUF7fJbH0eLJNh77223WYxSpDeL6rtXkqjKXpCF-kWOZyXSIE240SL9C0grP8vTGFIQdl_xQTEanfVTlCubwmL9AwAxn8nxsjFMM3QzFA1SVtxP8VB-t5ngwRDUy6FiAOmZMN-Tp488VWxFOC5wOcKu9rp0g2MsR7O_QGX0_vknBP0REqOHNXZiGEO7TMpmkHvHYhcaDaI3Hbgnnri58qDGZbRuaUGOhM6Vnw-M-VAvPmJYUyn3mMCwQKreoZ0TVY6oAPjjpLfNKhExpoYNUF0OzVw5_4G043_gEStHm4LpsJIzA3gYb928sPM8aozrU5iQ4ug2SqqfTj4a7G2N5e2BA5BXl3AaaNNaozZNJA_O1P3qYWci4qzT1ynWtqSWIYTNy7Q_oFgqIIBJqFBthth63hp_LkCiseWegaHXH0aRLMmUdKUZ3ZJr0XA0WWE5UiAUCYqVupPP-y8xSIeUCatY';
 
-// DADOS DE ORIGEM E DIMENSÕES PADRÃO DO PACOTE
-$cep_origem = '01001-001'; // CEP de onde os produtos são enviados.
-$peso_padrao_kg = 0.3;     // Peso padrão do pacote em kg.
-$altura_padrao_cm = 5;     // Altura padrão em cm.
-$largura_padrao_cm = 15;    // Largura padrão em cm.
-$comprimento_padrao_cm = 20; // Comprimento padrão em cm.
+// DADOS DO SEU PACOTE E ORIGEM (CONFORME VOCÊ INFORMOU)
+$cep_origem = '01022070';
+$peso_padrao_kg = 1;      // 1 kg
+$altura_padrao_cm = 5;
+$largura_padrao_cm = 28;
+$comprimento_padrao_cm = 20;
 
 // --- LÓGICA DA API ---
 
-// Limpa o CEP de destino, removendo qualquer caractere que não seja número.
 $cep_destino = preg_replace('/[^0-9]/', '', $_GET['cep'] ?? '');
 
-// Valida se o CEP tem 8 dígitos.
 if (strlen($cep_destino) !== 8) {
     echo json_encode(['sucesso' => false, 'mensagem' => 'CEP de destino inválido.']);
     exit();
 }
 
-// Monta o corpo (payload) da requisição no formato esperado pela API do Melhor Envio.
+// Prepara os dados no formato que a API do Melhor Envio espera (JSON)
 $payload = [
     'from' => [
         'postal_code' => $cep_origem,
@@ -51,30 +38,28 @@ $payload = [
     ],
 ];
 
-// Endpoint da API de produção do Melhor Envio para cálculo de frete.
+// A API do Melhor Envio usa o ambiente de "sandbox" para testes e o de produção para cotações reais.
+// Usaremos o de produção diretamente.
 $url_api = 'https://www.melhorenvio.com.br/api/v2/me/shipment/calculate';
 
-// Inicia a chamada cURL para a API externa.
+// Inicia a chamada cURL (padrão para chamadas de API complexas em PHP)
 $ch = curl_init($url_api);
 
-// Configura as opções do cURL.
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Retorna a resposta como string.
-curl_setopt($ch, CURLOPT_POST, true); // Define o método como POST.
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload)); // Envia os dados em formato JSON.
-curl_setopt($ch, CURLOPT_HTTPHEADER, [ // Define os cabeçalhos da requisição.
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Accept: application/json',
     'Content-Type: application/json',
     'Authorization: Bearer ' . $token_melhor_envio,
-    // É uma boa prática se identificar no User-Agent.
-    'User-Agent: ' . 'Empresa_Nome (seu-email@vtnbaterias.com.br)'
+    'User-Agent: ' . 'VTN Baterias (seu-email-de-contato@dominio.com.br)' // É uma boa prática se identificar
 ]);
 
-// Executa a requisição e obtém a resposta e o código HTTP.
 $response = curl_exec($ch);
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
-// Trata a resposta da API.
+// Trata a resposta da API
 if ($http_code !== 200 || $response === false) {
     echo json_encode(['sucesso' => false, 'mensagem' => 'Não foi possível se conectar à API de fretes.']);
     exit();
@@ -82,17 +67,16 @@ if ($http_code !== 200 || $response === false) {
 
 $data = json_decode($response, true);
 
-// Verifica se a API do Melhor Envio retornou algum erro.
 if (isset($data['error']) || isset($data['errors'])) {
     $error_message = $data['error'] ?? $data['errors'][0]['error'] ?? 'Erro desconhecido na cotação.';
     echo json_encode(['sucesso' => false, 'mensagem' => $error_message]);
     exit();
 }
 
-// Formata os resultados para serem facilmente utilizados pelo front-end.
+// Formata os resultados para o nosso frontend
 $resultados = [];
 foreach ($data as $opcao) {
-    // Garante que apenas opções válidas com preço sejam adicionadas.
+    // A API pode retornar opções inválidas, então verificamos se elas têm um preço.
     if (isset($opcao['price'])) {
         $resultados[] = [
             'tipo' => $opcao['name'], // Ex: "SEDEX", "PAC", "Jadlog .Package"
@@ -102,5 +86,5 @@ foreach ($data as $opcao) {
     }
 }
 
-// Retorna os resultados formatados em JSON.
 echo json_encode(['sucesso' => true, 'opcoes' => $resultados]);
+?>
