@@ -81,7 +81,7 @@ Siga os passos abaixo para configurar e rodar o projeto no seu ambiente de desen
 Após a configuração, você pode acessar o painel de administração em `http://localhost/projeto-vtn-baterias/admin/`.
 
 * **Usuário:** `admin`
-* **Senha:** `1234`
+* **Senha:** `admin`
 
 ---
 
